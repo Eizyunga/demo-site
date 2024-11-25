@@ -1,15 +1,18 @@
-<form [formGroup]="folioFormGroup">
-  <div formArrayName="folioForm">
-    <div *ngFor="let fForm of folioForm.controls; let i=index">
-      <div [formGroupName]="i">
-        <!-- TODO - Find better (and clean) alternative to $any here -->
-        <app-folio-create-form [formNumber]="i" [folioForm]="$any(fForm)"></app-folio-create-form>
-        <button (click)="removeFolioGroup(i)">Remove Group</button>
-      </div>
-    </div>
-  </div>
+<div class="create-folio-container">
+  <form [formGroup]="folioFormGroup">
+    <mat-grid-list rowHeight="2:1" cols="2" formArrayName="folioForm" class="form-container">
+      <mat-grid-tile *ngFor="let fForm of folioForm.controls; let i=index" class="create-form">
+        <div [formGroupName]="i" class="form-group-container">
+          <button class="remove-button" (click)="confirmGroupRemoval(i)">Remove Group</button>
+          <!-- TODO - Find better (and clean) alternative to $any here -->
+          <app-folio-create-form [formNumber]="i" [folioForm]="$any(fForm)"></app-folio-create-form>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile class="new-group-button">
+        <button type="button" (click)="addFolioGroup()"><i class="bi bi-plus-square"></i></button>
+      </mat-grid-tile>
+    </mat-grid-list>
 
-
-  <button type="button" (click)="addFolioGroup()">Add group</button>
-  <button type="button" (click)="onSubmit()">Submit form</button>
-</form>
+    <button type="button" (click)="onSubmit()">Confirm Changes</button>
+  </form>
+</div>

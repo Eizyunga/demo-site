@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { FolioBody } from "../../models/folio.model";
-import { Observable, of } from "rxjs";
+import { Folio, FolioBody } from "../../models/folio.model";
+import { Observable, of, Subject } from "rxjs";
 import { priceValidator } from "../../validators/price-validator";
 
 @Injectable({
@@ -80,6 +80,8 @@ export class FolioService {
       }
     ]
   };
+  isLoading: Subject<boolean> = new Subject<boolean>();
+  private folioData: Folio[] = [];
 
   constructor(private fb: FormBuilder) { }
 
@@ -103,35 +105,44 @@ export class FolioService {
     }
   }
 
-  getFolioData(): FormGroup {
+  getFolioData(): Folio[] {
+    return this.folioData;
+  }
+
+  getFolioFormData(): FormGroup {
     const folioData = this.fb.group({
       folioForm: this.fb.array([])
     });
 
+    this.isLoading.next(true);
     this.fetchFolioData().subscribe({
-      next: (data) => {
-        for(let i = 0; i < data.folioData.length; i++) {
-          this.toFormArray(folioData.get("folioForm")).push(this.fb.group({
-            name: [data.folioData[i].name, Validators.required],
-            itemDetails: this.fb.array(data.folioData[i].itemDetails.map(item => {
-              return this.fb.group({
-                itemName: [item.itemName, Validators.required],
-                itemFee: [item.itemFee, [Validators.required, priceValidator]]
-              })
-            }))
-          }));
+      next: (data: FolioBody): void => {
+        if (!!data && !!data.folioData) {
+          this.folioData = data.folioData;
+          for(let i = 0; i < data.folioData.length; i++) {
+            this.toFormArray(folioData.get("folioForm")).push(this.fb.group({
+              name: [data.folioData[i].name, Validators.required],
+              itemDetails: this.fb.array(data.folioData[i].itemDetails.map(item => {
+                return this.fb.group({
+                  itemName: [item.itemName, Validators.required],
+                  itemFee: [item.itemFee, [Validators.required, priceValidator]]
+                })
+              }))
+            }));
+          }
         }
       }, error: (error) => {
 
       },
       complete: () => {
-        // TODO look into
-        // "Complete" is new to me so not sure what I should do here yet
+        this.setLoading(false);
       }
     });
-
-    // console.log(folioData);
     return folioData;
+  }
+
+  private setLoading(value: boolean) {
+    this.isLoading.next(value);
   }
 
   private toFormArray(form: any): FormArray {

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FolioData } from "../../models/folio-data.model";
+import { Folio } from "../../../../models/folio.model";
 
 @Component({
   selector: 'app-folio',
@@ -9,10 +9,14 @@ import { FolioData } from "../../models/folio-data.model";
 
 export class FolioComponent implements OnInit {
 
-  @Input() content: FolioData[] = [];
   @Input() number: number = 1;
   @Input() folioName: string = '';
   @Input() partnerLength: number = 0;
+  @Input() content: Folio = {
+    folioNumber: -1,
+    name: '',
+    itemDetails: []
+  };
   @Output() emitToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   isFocused: boolean = false;
@@ -20,16 +24,16 @@ export class FolioComponent implements OnInit {
   focusEnding: string = '';
 
   ngOnInit(): void {
-    if (!!this.content && this.content.length > 0 && this.content.length < this.partnerLength) {
+    if (!!this.content && this.content.itemDetails.length > 0 && this.content.itemDetails.length < this.partnerLength) {
       this.addBlankRows(this.partnerLength);
     }
   }
 
   addBlankRows(rows: number) {
-    for (let i: number = this.content.length; i < rows; i++) {
-      this.content.push({
-        field1: '',
-        field2: ''
+    for (let i: number = this.content.itemDetails.length; i < rows; i++) {
+      this.content.itemDetails.push({
+        itemName: '',
+        itemFee: ''
       })
     }
   }

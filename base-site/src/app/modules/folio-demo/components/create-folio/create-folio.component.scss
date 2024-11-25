@@ -1,0 +1,17 @@
+.create-folio-container {
+  .form-container {
+    .create-form {
+      overflow: auto;
+      border: 1px solid;
+      .form-group-container {
+        .remove-button {
+          float: right;
+        }
+      }
+    }
+
+    .new-group-button {
+      border: 1px solid;
+    }
+  }
+}

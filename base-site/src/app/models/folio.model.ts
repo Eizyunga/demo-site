@@ -11,5 +11,10 @@ export interface Folio {
 
 export interface  FolioItem {
   itemName: string;
-  itemFee: number;
+  itemFee: number | string;
+}
+
+export enum FolioState {
+  VIEW = 'view',
+  CREATE = 'create',
 }

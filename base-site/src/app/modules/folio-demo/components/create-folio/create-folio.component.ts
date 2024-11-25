@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { FolioService } from "../../../../services/folio/folio.service";
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
 
 @Component({
   selector: 'app-create-folio',
@@ -10,16 +12,30 @@ import { FolioService } from "../../../../services/folio/folio.service";
 export class CreateFolioComponent implements OnInit{
   folioFormGroup: FormGroup;
 
-  constructor(private fb:FormBuilder, private folioService: FolioService) {
+  constructor(private fb:FormBuilder, private folioService: FolioService, public dialog: MatDialog) {
     this.folioFormGroup = this.fb.group({
       folioForm: this.fb.array([]),
     });
   }
 
+  confirmGroupRemoval(i: number): void {
+    if (this.canRemoveFolio(i)) {
+      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+        data: { groupIndex: i }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result) {
+          this.removeFolioGroup(i);
+        }
+      });
+    }
+  }
+
   ngOnInit() {
     // this.addFolioGroup();
 
-    this.folioFormGroup = this.folioService.getFolioData();
+    this.folioFormGroup = this.folioService.getFolioFormData();
   }
 
   get folioForm(): FormArray {
@@ -40,10 +56,12 @@ export class CreateFolioComponent implements OnInit{
   }
 
   removeFolioGroup(i: number): void {
-    if (!!this.folioForm.at(i) && this.folioForm.length > 1) {
+    if (this.canRemoveFolio(i)) {
       this.folioForm.removeAt(i);
     }
   }
+
+  private canRemoveFolio = (i: number): boolean => !!this.folioForm.at(i) && this.folioForm.length > 1;
 
   onSubmit() {
     if (this.folioFormGroup.valid) {
