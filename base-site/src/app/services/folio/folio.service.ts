@@ -130,7 +130,7 @@ export class FolioService {
       }
     });
 
-    console.log(folioData);
+    // console.log(folioData);
     return folioData;
   }
 
