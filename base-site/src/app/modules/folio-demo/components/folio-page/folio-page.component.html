@@ -1,0 +1,8 @@
+<div class="folio-page d-flex">
+  <ng-container *ngFor="let data of fData; index as i">
+    <div class="folio">
+      <app-folio [content]="data.data" [folioName]="data.name" [number]="i + 1"
+                 [partnerLength]="(i + 1) % 2 === 0 ? fData[i - 1].data.length : (!!fData[i + 1] ? fData[i + 1].data.length : 0)"></app-folio>
+    </div>
+  </ng-container>
+</div>

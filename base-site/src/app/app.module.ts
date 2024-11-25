@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainPageModule } from "./modules/main-page/main-page.module";
 import {LocationStrategy, PathLocationStrategy} from "@angular/common";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -13,9 +14,12 @@ import {LocationStrategy, PathLocationStrategy} from "@angular/common";
   imports: [
     BrowserModule,
     AppRoutingModule,
-  //  MainPageModule
+    MainPageModule,
+    BrowserAnimationsModule
   ],
   providers: [{provide: LocationStrategy, useClass: PathLocationStrategy}],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

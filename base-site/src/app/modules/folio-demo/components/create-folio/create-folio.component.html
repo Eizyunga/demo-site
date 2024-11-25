@@ -1,0 +1,15 @@
+<form [formGroup]="folioFormGroup">
+  <div formArrayName="folioForm">
+    <div *ngFor="let fForm of folioForm.controls; let i=index">
+      <div [formGroupName]="i">
+        <!-- TODO - Find better (and clean) alternative to $any here -->
+        <app-folio-create-form [formNumber]="i" [folioForm]="$any(fForm)"></app-folio-create-form>
+        <button (click)="removeFolioGroup(i)">Remove Group</button>
+      </div>
+    </div>
+  </div>
+
+
+  <button type="button" (click)="addFolioGroup()">Add group</button>
+  <button type="button" (click)="onSubmit()">Submit form</button>
+</form>

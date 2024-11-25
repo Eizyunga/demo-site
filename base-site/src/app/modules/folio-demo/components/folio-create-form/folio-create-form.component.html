@@ -1,0 +1,16 @@
+<form [formGroup]="folioForm">
+  <label for="name">Name </label>
+  <input type="text" id="name" name="name" formControlName="name">
+  <div formArrayName="itemDetails">
+    <div *ngFor="let unusedVariable of itemDetails.controls; let i=index">
+      <div [formGroupName]="i">
+        Item Name: <input type="text" formControlName="itemName">
+        Item Price: <input type="text" formControlName="itemFee">
+
+        <button (click)="removeItem(i)">Remove</button>
+      </div>
+    </div>
+  </div>
+  <button type="button" (click)="addItem()">Add</button>
+</form>
+

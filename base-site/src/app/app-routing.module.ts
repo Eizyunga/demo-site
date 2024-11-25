@@ -8,6 +8,14 @@ const routes: Routes = [
   {
     path: 'minecraft',
     loadChildren: () => import('./modules/minecraft/minecraft.module').then(m => m.MinecraftModule)
+  },
+  {
+    path: 'folio-demo',
+    loadChildren: () => import('./modules/folio-demo/angular-demo.module').then(m => m.AngularDemoModule)
+  },
+  {
+    path: 'user-demo',
+    loadChildren: () => import('./modules/user-demo/user-demo.module').then(m => m.UserDemoModule)
   }
 ];
 
