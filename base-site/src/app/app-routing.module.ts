@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard, VerifyGuard } from "./guards/auth.guard";
 
 const routes: Routes = [
   { path: '',
@@ -11,11 +12,17 @@ const routes: Routes = [
   },
   {
     path: 'folio-demo',
-    loadChildren: () => import('./modules/folio-demo/angular-demo.module').then(m => m.AngularDemoModule)
+    loadChildren: () => import('./modules/folio-demo/folio-demo.module').then(m => m.FolioDemoModule),
+    canActivate: [AuthGuard]
   },
   {
-    path: 'user-demo',
-    loadChildren: () => import('./modules/user-demo/user-demo.module').then(m => m.UserDemoModule)
+    path: 'login',
+    loadChildren: () => import('./modules/login/login.module').then(m => m.LoginModule)
+  },
+  {
+    path: 'verify',
+    loadChildren: () => import('./modules/verification/verification.module').then(m => m.VerificationModule),
+    canActivate: [VerifyGuard]
   }
 ];
 

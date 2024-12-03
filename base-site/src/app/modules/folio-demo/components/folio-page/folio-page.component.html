@@ -1,15 +1,23 @@
-<div class="folio-page">
-  <ng-container *ngIf="viewState === FolioState.CREATE">
+<div class="folio-page" [ngClass]="viewState === FolioState.VIEW ? 'd-flex' : ''">
+  <div class="logout-button" *ngIf="!isLoading">
+    <button (click)="logout()">Log Out</button>
+  </div>
+
+  <ng-container *ngIf="isLoading">
+    <ng-container *ngTemplateOutlet="loadingSymbol"></ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="viewState === FolioState.CREATE && !isLoading">
     <ng-container *ngTemplateOutlet="createFolio"></ng-container>
   </ng-container>
 
-  <ng-container *ngIf="viewState === FolioState.VIEW">
+  <ng-container *ngIf="viewState === FolioState.VIEW && !isLoading">
     <ng-container *ngTemplateOutlet="folioDisplay"></ng-container>
   </ng-container>
 </div>
 
-
 <ng-template #folioDisplay>
+  <a (click)="viewState = FolioState.CREATE">Edit folios</a>
   <ng-container *ngFor="let data of fData; index as i">
     <div class="folio">
       <app-folio [content]="data" [folioName]="data.name" [number]="i + 1"
@@ -19,5 +27,10 @@
 </ng-template>
 
 <ng-template #createFolio>
-  <app-create-folio></app-create-folio>
+  <a *ngIf="fData.length > 0" (click)="switchToViewMode()">View Folios</a>
+  <app-create-folio (emitViewStateChange)="switchToViewMode()"></app-create-folio>
+</ng-template>
+
+<ng-template #loadingSymbol>
+  <mat-spinner></mat-spinner>
 </ng-template>

@@ -1,0 +1,44 @@
+<div class="login-container">
+  <ng-container *ngIf="isLoading">
+    <ng-container *ngTemplateOutlet="loadingSymbol"></ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="viewState === LoginState.LOGIN && !isLoading">
+    <ng-container *ngTemplateOutlet="loginForm"></ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="viewState === LoginState.SIGNUP && !isLoading">
+    <ng-container *ngTemplateOutlet="signUpForm"></ng-container>
+  </ng-container>
+</div>
+
+
+<ng-template #loginForm>
+  <form [formGroup]="loginFormGroup">
+    <label for="lEmail">Email: </label>
+    <input type="text" id="lEmail" name="email" formControlName="email">
+    <label for="lPassword">Password: </label>
+    <input type="text" id="lPassword" name="password" formControlName="password">
+  </form>
+  <span>Don't have an account? <a class="link" (click)="toggleForm()">Sign Up</a> </span>
+  <button (click)="onLogin()">Submit</button>
+</ng-template>
+
+<ng-template #signUpForm>
+  <form [formGroup]="signupFormGroup">
+    <label for="firstName">First Name: </label>
+    <input type="text" id="firstName" name="firstName" formControlName="firstName">
+    <label for="lastName">Last Name: </label>
+    <input type="text" id="lastName" name="lastName" formControlName="lastName">
+    <label for="email">Email: </label>
+    <input type="text" id="email" name="firstName" formControlName="email">
+    <label for="lastName">Password: </label>
+    <input type="text" id="password" name="password" formControlName="password">
+  </form>
+  <span>Already have an account? <a class="link" (click)="toggleForm()">Log In</a> </span>
+  <button class="link" (click)="onSignUp()">Submit</button>
+</ng-template>
+
+<ng-template #loadingSymbol>
+  <mat-spinner></mat-spinner>
+</ng-template>

@@ -1,155 +1,121 @@
 import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Folio, FolioBody } from "../../models/folio.model";
-import { Observable, of, Subject } from "rxjs";
+import { Folio, FolioBody, FolioItem } from "../../models/folio.model";
+import { Observable, Subject, throwError } from "rxjs";
 import { priceValidator } from "../../validators/price-validator";
+import { HttpClient } from "@angular/common/http";
+import { CommonService } from "../common/common.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class FolioService {
+export class FolioService extends CommonService {
 
-  mockData: FolioBody = {
-    "name": "temp",
-    "folioData": [
-      {
-        "folioNumber": 0,
-        "name": 'name one',
-        "itemDetails": [
-          {
-            "itemName": "dfggs",
-            "itemFee": 456
-          },
-          {
-            "itemName": "dfgs dgrre",
-            "itemFee": 6262
-          },
-          {
-            "itemName": "w4treg fgtu ht6whsr",
-            "itemFee": 2377
-          }
-        ]
-      },
-      {
-        "folioNumber": 1,
-        "name": 'name two',
-        "itemDetails": [
-          {
-            "itemName": "dhbxtg",
-            "itemFee": 345
-          },
-          {
-            "itemName": "ghfh",
-            "itemFee": 1
-          }
-        ]
-      },
-      {
-        "folioNumber": 2,
-        "name": 'name three',
-        "itemDetails": [
-          {
-            "itemName": " argaeg",
-            "itemFee": 63634
-          },
-          {
-            "itemName": "a eg",
-            "itemFee": 345
-          },
-          {
-            "itemName": "er gaerg",
-            "itemFee": 3653
-          },
-          {
-            "itemName": "rga er",
-            "itemFee": 452
-          },
-          {
-            "itemName": "aergae",
-            "itemFee": 346
-          },
-          {
-            "itemName": "r aer",
-            "itemFee": 8456
-          },
-          {
-            "itemName": "gaerger ge",
-            "itemFee": 1234
-          }
-        ]
-      }
-    ]
-  };
-  isLoading: Subject<boolean> = new Subject<boolean>();
+  folioData$: Subject<Folio[]> = new Subject<Folio[]>();
+  folioForm$: Subject<FormGroup> = new Subject<FormGroup>();
   private folioData: Folio[] = [];
+  private apiUrl: string = 'http://localhost:3000/api/v1/folio';
+  private folioFormData: FormGroup = this.fb.group({
+    folioForm: this.fb.array([])
+  });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private http: HttpClient) {
+    super();
+  }
 
-  submitFolioData(folioForm: FormGroup): void {
+  submitFolioData(folioForm: FormGroup): Observable<any> {
     if (folioForm.valid) {
+      this.setLoading(true);
       const bodyData: FolioBody = {
-        name: 'temp',
+        name: '',
         folioData: []
       }
 
-      for(let i = 0; i < folioForm.value.folioForm.length; i++) {
+      for(let i: number = 0; i < folioForm.value.folioForm.length; i++) {
         bodyData.folioData.push({
           folioNumber: i,
           name: folioForm.value.folioForm[i].name,
-          itemDetails: folioForm.value.folioForm[i].itemDetails,
+          itemDetails: folioForm.value.folioForm[i].itemDetails.map((details: FolioItem) => {
+            return {
+              itemName: details.itemName,
+              itemFee: Number(details.itemFee),
+            }
+          }),
         })
       }
-
-      // TODO - remove
-      console.log(bodyData);
+      let result: Observable<any> = new Observable<any>();
+      this.sendFolioData(bodyData).subscribe({
+        next: (res: FolioBody) => {
+          this.updateFormData(res);
+        },
+        error: (error) => {
+          result = error;
+        },
+        complete: () => {
+        }
+      });
+      this.setLoading(false);
+      return result;
+    } else {
+      return throwError(() => new Error('Invalid request'));
     }
   }
 
-  getFolioData(): Folio[] {
-    return this.folioData;
+  pingFolioFormData(): void {
+    this.folioForm$.next(this.folioFormData);
   }
 
-  getFolioFormData(): FormGroup {
-    const folioData = this.fb.group({
-      folioForm: this.fb.array([])
-    });
+  private get folioForm(): FormArray {
+    return this.folioFormData.get("folioForm") as FormArray
+  }
 
-    this.isLoading.next(true);
+  private updateFormData(data: FolioBody) {
+    if (!!data && !!data.folioData) {
+      this.setFolioData(data);
+
+      // Clear and set the form data
+      this.folioForm.clear();
+      for(let i: number = 0; i < data.folioData.length; i++) {
+        this.folioForm.push(this.fb.group({
+          name: [data.folioData[i].name, Validators.required],
+          itemDetails: this.fb.array(data.folioData[i].itemDetails.map((item: FolioItem) => {
+            return this.fb.group({
+              itemName: [item.itemName, Validators.required],
+              itemFee: [item.itemFee, [Validators.required, priceValidator]]
+            });
+          }))
+        }));
+      }
+      this.pingFolioFormData();
+    }
+  }
+
+  getData(): void {
+    this.isLoading$.next(true);
     this.fetchFolioData().subscribe({
       next: (data: FolioBody): void => {
-        if (!!data && !!data.folioData) {
-          this.folioData = data.folioData;
-          for(let i = 0; i < data.folioData.length; i++) {
-            this.toFormArray(folioData.get("folioForm")).push(this.fb.group({
-              name: [data.folioData[i].name, Validators.required],
-              itemDetails: this.fb.array(data.folioData[i].itemDetails.map(item => {
-                return this.fb.group({
-                  itemName: [item.itemName, Validators.required],
-                  itemFee: [item.itemFee, [Validators.required, priceValidator]]
-                })
-              }))
-            }));
-          }
-        }
-      }, error: (error) => {
-
+        this.updateFormData(data);
+      }, error: (error): void => {
+        this.redirectToLoginPage();
       },
-      complete: () => {
+      complete: (): void => {
         this.setLoading(false);
       }
     });
-    return folioData;
   }
 
-  private setLoading(value: boolean) {
-    this.isLoading.next(value);
+  private setFolioData(data: FolioBody): void {
+    this.folioData = data.folioData;
+    this.folioData$.next(data.folioData);
   }
 
-  private toFormArray(form: any): FormArray {
-    return form as FormArray;
+  private fetchFolioData(): Observable<any> {
+    return this.http.get(`${this.apiUrl}/folios`);
   }
 
-  private fetchFolioData(): Observable<FolioBody> {
-    return of(this.mockData);
+  private sendFolioData(data: FolioBody): Observable<any> {
+    const method = this.folioData.length > 0 ? 'put' : 'post';
+    const api = this.folioData.length > 0 ? 'update' : 'create';
+    return this.http[method](`${this.apiUrl}/${api}`, data);
   }
 }

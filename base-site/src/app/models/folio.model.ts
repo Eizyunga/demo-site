@@ -1,5 +1,6 @@
 export interface FolioBody {
   name: string;
+  email?: string;
   folioData: Folio[];
 }
 
@@ -9,7 +10,7 @@ export interface Folio {
   itemDetails: FolioItem[];
 }
 
-export interface  FolioItem {
+export interface FolioItem {
   itemName: string;
   itemFee: number | string;
 }

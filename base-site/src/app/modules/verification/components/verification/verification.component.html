@@ -1,0 +1,24 @@
+<div class="verification-container">
+  <ng-container *ngIf="isLoading">
+    <ng-container *ngTemplateOutlet="loadingSymbol"></ng-container>
+  </ng-container>
+
+  <ng-container *ngIf="!isLoading">
+    <ng-container *ngTemplateOutlet="verificationForm"></ng-container>
+  </ng-container>
+</div>
+
+<ng-template #verificationForm>
+  <form [formGroup]="verifyFormGroup">
+    <label for="password">One-Time Password: </label>
+    <input type="text" id="password" name="password" formControlName="password">
+  </form>
+  <span>Didn't receive an email within 10 minutes? <a class="link" (click)="sendEmail()">Send again!</a> </span>
+  <button (click)="onVerify()">Verify</button>
+
+  <button (click)="logout()">Log Out</button>
+</ng-template>
+
+<ng-template #loadingSymbol>
+  <mat-spinner></mat-spinner>
+</ng-template>

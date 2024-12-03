@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Folio } from "../../../../models/folio.model";
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Folio, FolioItem } from "../../../../models/folio.model";
 
 @Component({
   selector: 'app-folio',
@@ -7,7 +7,7 @@ import { Folio } from "../../../../models/folio.model";
   styleUrls: ['./folio.component.scss']
 })
 
-export class FolioComponent implements OnInit {
+export class FolioComponent implements AfterViewInit {
 
   @Input() number: number = 1;
   @Input() folioName: string = '';
@@ -22,8 +22,12 @@ export class FolioComponent implements OnInit {
   isFocused: boolean = false;
   isExpanded: boolean = false;
   focusEnding: string = '';
+  additionalRows: FolioItem[] = [];
 
-  ngOnInit(): void {
+  constructor() {
+  }
+
+  ngAfterViewInit(): void {
     if (!!this.content && this.content.itemDetails.length > 0 && this.content.itemDetails.length < this.partnerLength) {
       this.addBlankRows(this.partnerLength);
     }
@@ -31,7 +35,7 @@ export class FolioComponent implements OnInit {
 
   addBlankRows(rows: number) {
     for (let i: number = this.content.itemDetails.length; i < rows; i++) {
-      this.content.itemDetails.push({
+      this.additionalRows.push({
         itemName: '',
         itemFee: ''
       })

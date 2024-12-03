@@ -10,7 +10,11 @@
   <div class="folio-body">
     <div class="folio-row d-flex" *ngFor="let row of content.itemDetails;">
       <span>{{row.itemName}}</span>
-      <span>{{row.itemFee}}</span>
+      <span>{{row.itemFee | currency}}</span>
+    </div>
+    <div class="folio-row d-flex" *ngFor="let row of additionalRows;">
+      <span>{{row.itemName}}</span>
+      <span>{{row.itemFee | currency}}</span>
     </div>
     <div class="folio-row final-row"></div>
   </div>

@@ -1,21 +1,29 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { FolioService } from "../../../../services/folio/folio.service";
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from "../confirm-dialog/confirm-dialog.component";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-create-folio',
   templateUrl: './create-folio.component.html',
   styleUrls: ['./create-folio.component.scss']
 })
-export class CreateFolioComponent implements OnInit{
+export class CreateFolioComponent implements OnInit, OnDestroy {
+
+  @Output() emitViewStateChange: EventEmitter<void> = new EventEmitter<void>();
   folioFormGroup: FormGroup;
+  private subscriptions: Subscription[] = [];
 
   constructor(private fb:FormBuilder, private folioService: FolioService, public dialog: MatDialog) {
     this.folioFormGroup = this.fb.group({
       folioForm: this.fb.array([]),
     });
+
+    this.subscriptions.push(this.folioService.folioForm$.subscribe((formData: FormGroup) => {
+      this.processFormData(formData);
+    }));
   }
 
   confirmGroupRemoval(i: number): void {
@@ -32,10 +40,16 @@ export class CreateFolioComponent implements OnInit{
     }
   }
 
-  ngOnInit() {
-    // this.addFolioGroup();
+  processFormData(formData: FormGroup): void {
+    this.folioFormGroup = formData;
 
-    this.folioFormGroup = this.folioService.getFolioFormData();
+    if (this.folioForm.length < 0) {
+      this.addFolioGroup();
+    }
+  }
+
+  ngOnInit() {
+    this.folioService.pingFolioFormData();
   }
 
   get folioForm(): FormArray {
@@ -65,7 +79,19 @@ export class CreateFolioComponent implements OnInit{
 
   onSubmit() {
     if (this.folioFormGroup.valid) {
-      this.folioService.submitFolioData(this.folioFormGroup);
+      this.folioService.submitFolioData(this.folioFormGroup).subscribe({
+        next: (res) => {
+        }, error: (error) => {
+        },
+        complete: () => {
+          this.emitViewStateChange.next();
+        }
+      })
     }
+  }
+
+  // TODO - make base component for this redundancy
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
   }
 }
