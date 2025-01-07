@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Folio, FolioState } from "../../../../models/folio.model";
 import { FolioService } from "../../../../services/folio/folio.service";
 import { Subscription } from "rxjs";
@@ -9,7 +9,7 @@ import { AuthService } from "../../../../services/auth/auth.service";
   templateUrl: './folio-page.component.html',
   styleUrls: ['./folio-page.component.scss']
 })
-export class FolioPageComponent implements OnInit, OnDestroy, AfterViewInit, OnChanges {
+export class FolioPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   fData: Folio[] = [];
   isLoading: boolean = true;
@@ -21,13 +21,6 @@ export class FolioPageComponent implements OnInit, OnDestroy, AfterViewInit, OnC
               private authService: AuthService) {
     this.subscriptions.push(this.folioService.isLoading$.subscribe((value: boolean) => {
       this.isLoading = value;
-      // console.log(value + ' received');
-      // if (!this.isLoading) {
-      //   this.fData = this.folioService.getFolioData();
-      //   this.processFolioData();
-      // } else {
-      //   this.viewState = FolioState.LOADING;
-      // }
     }));
     this.subscriptions.push(this.folioService.folioData$.subscribe((data: Folio[]): void => {
       this.processFolioData(data);
@@ -64,9 +57,5 @@ export class FolioPageComponent implements OnInit, OnDestroy, AfterViewInit, OnC
 
   switchToViewMode(): void {
     this.viewState = FolioState.VIEW;
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes ', changes);
   }
 }

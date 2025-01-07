@@ -1,0 +1,14 @@
+.login-container {
+  height: 100%;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+
+  .form-align {
+    display: contents;
+  }
+
+  .submit-button {
+    margin-top: 10px;
+  }
+}

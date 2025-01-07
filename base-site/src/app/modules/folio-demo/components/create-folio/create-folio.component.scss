@@ -1,9 +1,13 @@
 .create-folio-container {
+  padding-top: 40px;
+
   .form-container {
     .create-form {
       overflow: auto;
       border: 1px solid;
       .form-group-container {
+        height: 100%;
+
         .remove-button {
           float: right;
         }
@@ -13,5 +17,9 @@
     .new-group-button {
       border: 1px solid;
     }
+  }
+
+  .confirm-button {
+    margin-top: 15px;
   }
 }

@@ -1,9 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AuthService } from "../../../../services/auth/auth.service";
 import { LoginState, User, UserLogin } from "../../../../models/user.model";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import {FolioState} from "../../../../models/folio.model";
-import {Subscription} from "rxjs";
+import { Subscription } from "rxjs";
+import { passwordMatchValidator } from "../../../../validators/password.validator";
 
 @Component({
   selector: 'app-login',
@@ -30,7 +30,8 @@ export class LoginComponent implements OnInit, OnDestroy  {
       firstName: ['', Validators.required],
       lastName: '',
       email: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', Validators.required],
+      confirmPassword: ['', [Validators.required, passwordMatchValidator('password')]],
     });
   }
 
@@ -56,7 +57,8 @@ export class LoginComponent implements OnInit, OnDestroy  {
   }
 
   onSignUp(): void {
-    if (this.signupFormGroup.valid) {
+    // TODO - figure out issue with changing password field after confirm password field
+    if (this.signupFormGroup.valid && this.signupFormGroup.value.password === this.signupFormGroup.value.confirmPassword) {
       this.signUp({
         firstName: this.signupFormGroup.value.firstName,
         lastName: this.signupFormGroup.value.lastName || '',

@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { priceValidator } from "../../../../validators/price-validator";
+import { priceValidator } from "../../../../validators/price.validator";
 
 @Component({
   selector: 'app-folio-create-form',
@@ -11,6 +11,7 @@ export class FolioCreateFormComponent implements OnInit {
 
   @Input() formNumber: number = -1;
   @Input() folioForm: FormGroup;
+  @Output() emitGroupRemoval: EventEmitter<number> = new EventEmitter<number>()
 
   constructor(private fb:FormBuilder) {
     this.folioForm = this.fb.group({
@@ -40,10 +41,16 @@ export class FolioCreateFormComponent implements OnInit {
   removeItem(i: number) {
     if (!!this.itemDetails.at(i) && this.itemDetails.length > 1) {
       this.itemDetails.removeAt(i);
+    } else {
+      this.removeThisGroup();
     }
   }
 
   getFormLength = (): number => this.itemDetails.length;
+
+  private removeThisGroup(): void {
+    this.emitGroupRemoval.next(this.formNumber);
+  }
 
   ngOnInit(): void {
     if (this.getFormLength() === 0) {

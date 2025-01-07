@@ -34,7 +34,6 @@ export class AuthService extends CommonService {
   isVerified(): boolean {
     // I'm sure this could be done as a 1-liner
     const details: JwtPayload = jwtDecode(localStorage.getItem('token') || '');
-    console.log(details);
     return details.accountStatus === 'active';
   }
 
@@ -51,12 +50,10 @@ export class AuthService extends CommonService {
   }
 
   private verify(otp: OTP): Observable<any> {
-    console.log('or here');
     return this.http.post(`${this.apiUrl}/verify`, {pass: otp});
   }
 
   verifyUser(otp: OTP): void {
-    console.log('value is ' + otp);
     this.setLoading(true);
     this.verify(otp).subscribe({
       next: (res): void => {

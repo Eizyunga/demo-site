@@ -8,7 +8,6 @@ export const AuthGuard: CanActivateFn = (route, state): boolean => {
 
   if (authService.isLoggedIn()) {
     if (!authService.isVerified()) {
-      console.log('here');
       router.navigate(['/verify']);
       return false;
     }
@@ -22,7 +21,6 @@ export const AuthGuard: CanActivateFn = (route, state): boolean => {
 export const VerifyGuard: CanActivateFn = (route, state): boolean => {
   const authService: AuthService = inject(AuthService);
   const router: Router = inject(Router);
-  console.log(authService.isLoggedIn());
   if (authService.isLoggedIn() && !authService.isVerified()) {
     return true;
   }

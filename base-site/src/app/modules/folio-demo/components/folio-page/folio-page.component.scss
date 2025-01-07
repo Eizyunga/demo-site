@@ -1,7 +1,38 @@
 .folio-page {
-  background-color: gray;
+  //background-color: gray;
+  margin-top: 30px;
   height: 100%;
   justify-content: space-between;
   padding: 0 400px;
   flex-wrap: wrap;
+
+  .spinner {
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .view-button {
+    float: right;
+  }
+
+  .folio-display {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .folio-container {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 50% 50%;
+
+      .folio {
+        margin-bottom: 40px;
+        display: flex;
+        justify-content: center;
+      }
+    }
+  }
 }

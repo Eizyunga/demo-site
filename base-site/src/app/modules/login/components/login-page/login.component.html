@@ -1,4 +1,4 @@
-<div class="login-container">
+<div class="login-container d-flex">
   <ng-container *ngIf="isLoading">
     <ng-container *ngTemplateOutlet="loadingSymbol"></ng-container>
   </ng-container>
@@ -12,31 +12,50 @@
   </ng-container>
 </div>
 
-
 <ng-template #loginForm>
-  <form [formGroup]="loginFormGroup">
-    <label for="lEmail">Email: </label>
-    <input type="text" id="lEmail" name="email" formControlName="email">
-    <label for="lPassword">Password: </label>
-    <input type="text" id="lPassword" name="password" formControlName="password">
+  <form [formGroup]="loginFormGroup" class="login-form form-align">
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" placeholder="Enter your email" formControlName="email">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" placeholder="Enter your password" formControlName="password">
+    </mat-form-field>
   </form>
   <span>Don't have an account? <a class="link" (click)="toggleForm()">Sign Up</a> </span>
-  <button (click)="onLogin()">Submit</button>
+  <button mat-raised-button color="primary" (click)="onLogin()" class="submit-button">Submit</button>
 </ng-template>
 
 <ng-template #signUpForm>
-  <form [formGroup]="signupFormGroup">
-    <label for="firstName">First Name: </label>
-    <input type="text" id="firstName" name="firstName" formControlName="firstName">
-    <label for="lastName">Last Name: </label>
-    <input type="text" id="lastName" name="lastName" formControlName="lastName">
-    <label for="email">Email: </label>
-    <input type="text" id="email" name="firstName" formControlName="email">
-    <label for="lastName">Password: </label>
-    <input type="text" id="password" name="password" formControlName="password">
+  <form [formGroup]="signupFormGroup" class="sign-up-form form-align">
+    <mat-form-field appearance="outline">
+      <mat-label>First Name</mat-label>
+      <input matInput placeholder="Enter your first name" formControlName="firstName">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Last Name</mat-label>
+      <input matInput placeholder="Enter your last name" formControlName="lastName">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" placeholder="Enter your email" formControlName="email">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Password</mat-label>
+      <input matInput type="password" placeholder="Enter your password" formControlName="password">
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Retype your Password</mat-label>
+      <input matInput type="password" placeholder="Retype your password" formControlName="confirmPassword">
+    </mat-form-field>
   </form>
+
+<!--  <div *ngIf="signupFormGroup.errors?.['matchValues'] && signupFormGroup.get('confirmPassword')?.touched">-->
+<!--    Passwords do not match.-->
+<!--  </div>-->
   <span>Already have an account? <a class="link" (click)="toggleForm()">Log In</a> </span>
-  <button class="link" (click)="onSignUp()">Submit</button>
+  <button mat-raised-button color="primary" (click)="onSignUp()" class="submit-button">Submit</button>
 </ng-template>
 
 <ng-template #loadingSymbol>

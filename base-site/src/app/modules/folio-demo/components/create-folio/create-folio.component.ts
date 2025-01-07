@@ -77,6 +77,7 @@ export class CreateFolioComponent implements OnInit, OnDestroy {
 
   private canRemoveFolio = (i: number): boolean => !!this.folioForm.at(i) && this.folioForm.length > 1;
 
+  // TODO - Get spinner to show on click
   onSubmit() {
     if (this.folioFormGroup.valid) {
       this.folioService.submitFolioData(this.folioFormGroup).subscribe({

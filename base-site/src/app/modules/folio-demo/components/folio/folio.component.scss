@@ -8,9 +8,16 @@
   .folio-header {
     padding: 0 15px;
     justify-content: space-between;
+    height: 40px;
+    align-items: center;
 
     .name-number {
       cursor: pointer;
+
+      .folio-name {
+        display: flex;
+        align-items: center;
+      }
 
       .folio-number {
         padding-right: 10px;
@@ -26,7 +33,16 @@
     font-size: 16px;
 
     .folio-row, .final-row {
+      border-top: 1px solid black;
       height: 24px;
+      justify-content: space-between;
+
+      .item-name {
+        padding-left: 15px;
+      }
+      .item-fee {
+        padding-right: 13px;
+      }
     }
   }
 }

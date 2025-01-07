@@ -5,14 +5,14 @@
         <div [formGroupName]="i" class="form-group-container">
           <button class="remove-button" (click)="confirmGroupRemoval(i)">Remove Group</button>
           <!-- TODO - Find better (and clean) alternative to $any here -->
-          <app-folio-create-form [formNumber]="i" [folioForm]="$any(fForm)"></app-folio-create-form>
+          <app-folio-create-form [formNumber]="i" [folioForm]="$any(fForm)" (emitGroupRemoval)="confirmGroupRemoval($event)"></app-folio-create-form>
         </div>
       </mat-grid-tile>
       <mat-grid-tile class="new-group-button">
-        <button type="button" (click)="addFolioGroup()"><i class="bi bi-plus-square"></i></button>
+        <button mat-raised-button (click)="addFolioGroup()"><i class="bi bi-plus-square"></i></button>
       </mat-grid-tile>
     </mat-grid-list>
 
-    <button type="button" (click)="onSubmit()">Confirm Changes</button>
+    <button mat-raised-button (click)="onSubmit()" class="confirm-button">Confirm Changes</button>
   </form>
 </div>

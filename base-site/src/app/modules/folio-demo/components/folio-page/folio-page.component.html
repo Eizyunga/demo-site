@@ -17,20 +17,26 @@
 </div>
 
 <ng-template #folioDisplay>
-  <a (click)="viewState = FolioState.CREATE">Edit folios</a>
-  <ng-container *ngFor="let data of fData; index as i">
-    <div class="folio">
-      <app-folio [content]="data" [folioName]="data.name" [number]="i + 1"
-                 [partnerLength]="(i + 1) % 2 === 0 ? fData[i - 1].itemDetails.length : (!!fData[i + 1] ? fData[i + 1].itemDetails.length : 0)"></app-folio>
+  <div class="folio-display">
+    <a (click)="viewState = FolioState.CREATE" class="link edit-folios">Edit folios</a>
+    <div class="folio-container">
+      <ng-container *ngFor="let data of fData; index as i">
+        <div class="folio">
+          <app-folio [content]="data" [folioName]="data.name" [number]="i + 1"
+                     [partnerLength]="(i + 1) % 2 === 0 ? fData[i - 1].itemDetails.length : (!!fData[i + 1] ? fData[i + 1].itemDetails.length : 0)"></app-folio>
+        </div>
+      </ng-container>
     </div>
-  </ng-container>
+  </div>
 </ng-template>
 
 <ng-template #createFolio>
-  <a *ngIf="fData.length > 0" (click)="switchToViewMode()">View Folios</a>
+  <a *ngIf="fData.length > 0" (click)="switchToViewMode()" class="view-button link">View Folios</a>
   <app-create-folio (emitViewStateChange)="switchToViewMode()"></app-create-folio>
 </ng-template>
 
 <ng-template #loadingSymbol>
-  <mat-spinner></mat-spinner>
+  <div class="d-flex spinner">
+    <mat-spinner></mat-spinner>
+  </div>
 </ng-template>

@@ -12,7 +12,6 @@ export class CommonService {
   constructor() { }
 
   protected setLoading(value: boolean) {
-    console.log('setting ', value);
     this.isLoading$.next(value);
   }
 
@@ -27,7 +26,8 @@ export class CommonService {
   }
 
   protected removeAuthToken(): void {
-    console.log(localStorage.getItem('token'));
     localStorage.removeItem('token');
   }
+
+
 }

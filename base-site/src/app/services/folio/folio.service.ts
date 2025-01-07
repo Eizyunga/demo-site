@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Folio, FolioBody, FolioItem } from "../../models/folio.model";
 import { Observable, Subject, throwError } from "rxjs";
-import { priceValidator } from "../../validators/price-validator";
+import { priceValidator } from "../../validators/price.validator";
 import { HttpClient } from "@angular/common/http";
 import { CommonService } from "../common/common.service";
 
